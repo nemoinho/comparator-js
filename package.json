@@ -1,0 +1,11 @@
+{
+  "name": "comparator",
+  "version": "1.0.0",
+  "description": "Sort arrays with ease and create descriptive compare-functions for them",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Felix Nehrke <felix+npm@nehrke.info>",
+  "license": "MIT"
+}
