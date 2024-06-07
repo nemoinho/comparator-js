@@ -2,10 +2,19 @@
   "name": "comparator",
   "version": "1.0.0",
   "description": "Sort arrays with ease and create descriptive compare-functions for them",
-  "main": "src/index.ts",
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js"
+  },
   "scripts": {
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Felix Nehrke <felix+npm@nehrke.info>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
 }
