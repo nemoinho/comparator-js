@@ -1,6 +1,6 @@
 {
   "name": "@nemoinho/comparator",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "description": "Sort arrays with ease and create descriptive compare-functions for them",
   "exports": {
     "require": "./dist/cjs/index.js",
