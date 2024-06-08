@@ -1,5 +1,5 @@
 {
-  "name": "comparator",
+  "name": "@nemoinho/comparator",
   "version": "1.0.0-rc.1",
   "description": "Sort arrays with ease and create descriptive compare-functions for them",
   "exports": {
@@ -23,6 +23,14 @@
   },
   "author": "Felix Nehrke <felix+npm@nehrke.info>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemoinho/comparator-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nemoinho/comparator-js/issues"
+  },
+  "homepage": "https://github.com/nemoinho/comparator-js#readme",
   "devDependencies": {
     "gts": "^5.3.0",
     "typescript": "^5.4.5"
