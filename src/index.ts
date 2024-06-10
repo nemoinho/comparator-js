@@ -1,7 +1,7 @@
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 type Val<T> = (obj: T) => (typeof obj)[any];
 type Simple = string | number;
-type Obj = object | Simple;
+export type Obj = object | Simple;
 type ValueExtractor<T extends Obj> =
   | (keyof T & (string | number | Symbol))
   | Val<T>;
@@ -43,10 +43,6 @@ function createComparator<T extends Obj>(
     valueExtractor: ValueExtractor<T> | Comparator<T>,
     keyComparator?: Compare<Val<T>>
   ) => {
-    if (!valueExtractor)
-      throw new Error(
-        `invalid comparator or value-extractor: ${valueExtractor?.toString()}`
-      );
     const otherComparator = isComparator(valueExtractor)
       ? valueExtractor
       : doComparing(valueExtractor, keyComparator);
@@ -63,7 +59,7 @@ function createComparator<T extends Obj>(
       doComparing(valueExtractor, keyComparator).reverse()
     );
   comparator.reverse = () =>
-    createComparator<T>((o1: T, o2: T) => compare(o1, o2) * -1);
+    createComparator<T>((o1: T, o2: T) => 0 - compare(o1, o2));
   comparator.sort = (list: Array<T>) => [...list].sort(comparator);
   return comparator;
 }
@@ -72,6 +68,10 @@ function doComparing<T extends Obj>(
   valueExtractor: ValueExtractor<T> | Comparator<T>,
   keyComparator?: Compare<Val<T>>
 ): Comparator<T> {
+  if (!valueExtractor)
+    throw new Error(
+      `invalid comparator or value-extractor: ${valueExtractor?.toString()}`
+    );
   if (isComparator(valueExtractor)) return valueExtractor;
   const extractValue: Val<T> =
     isString(valueExtractor) ||
@@ -79,7 +79,7 @@ function doComparing<T extends Obj>(
     isSymbol(valueExtractor)
       ? obj => obj[valueExtractor]
       : valueExtractor;
-  keyComparator =
+  const actualComparator =
     keyComparator ??
     ((a: Val<T>, b: Val<T>) => {
       if (isNumber(a)) {
@@ -93,7 +93,7 @@ function doComparing<T extends Obj>(
   return createComparator((o1: T, o2: T) => {
     const a = extractValue(o1);
     const b = extractValue(o2);
-    return keyComparator(a, b);
+    return actualComparator(a, b);
   });
 }
 

@@ -2,6 +2,7 @@
 !package.json
 !package-lock.json
 !src/
+!src/**/*.ts
 !tsconfig.json
 !tsconfig.cjs.json
 !.editorconfig
