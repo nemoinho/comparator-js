@@ -11,7 +11,7 @@ This library provides a simple API to create complex comparators and keep them u
 The library provides some simple functions and can be easily extended to complex comparators:
 
 ```typescript
-import { comparing } from "@nemoinho/comparator";
+import { comparing } from "@nemoinho/comparator-js";
 
 type Person = {
   name: string;
@@ -20,7 +20,9 @@ type Person = {
 
 const people = [/* people here */]
 
-const comparator = comparing<Person>("originCountry").thenComparing("name");
+const comparator =
+  comparing<Person>("originCountry")
+    .thenComparing("name");
 
 // create a new sorted list
 comparator.sort(people);
