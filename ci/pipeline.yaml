@@ -1,0 +1,202 @@
+---
+groups:
+- name: releases
+  jobs:
+  - 'release-*'
+- name: build
+  jobs:
+  - build
+
+jobs:
+- name: build
+  public: true
+  plan:
+  - in_parallel:
+    - get: version
+      params: { pre: rc }
+    - get: repository
+      trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: node
+          tag: alpine
+      inputs:
+      - name: repository
+      - name: version
+      params:
+        CI: 'true'
+        FORCE_COLOR: 1
+      run:
+        path: sh
+        args:
+        - -evc
+        - |
+          NEW_VERSION="$(cat version/version)"
+          cd repository
+          npm ci
+          npm run compile
+          npm test
+          npm version "$NEW_VERSION"
+          npm publish --access public --dry-run
+  - put: version
+    params: { file: version/version }
+- name: release-patch
+  plan:
+  - in_parallel:
+    - get: version
+      passed: [ build ]
+      params: { bump: patch }
+    - get: repository
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: node
+          tag: alpine
+      inputs:
+        - name: repository
+        - name: version
+      params:
+        CI: 'true'
+        FORCE_COLOR: 1
+        NPM_AUTH: ((npm_auth_token))
+      run:
+        path: sh
+        args:
+          - -evc
+          - |
+            NEW_VERSION="$(cat version/version)"
+            cd repository
+            npm ci
+            npm run compile
+            npm test
+            git tag | xargs git tag -d > /dev/null
+            npm version "$NEW_VERSION"
+            npm set "$NPM_AUTH"
+            npm publish --access public
+  - in_parallel:
+    - put: version
+      params:
+        file: version/version
+    - put: repository
+      params:
+        repository: repository
+        only_tags: true
+- name: release-minor
+  plan:
+  - in_parallel:
+    - get: version
+      passed: [ build ]
+      params: { bump: minor }
+    - get: repository
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: node
+          tag: alpine
+      inputs:
+        - name: repository
+        - name: version
+      params:
+        CI: 'true'
+        FORCE_COLOR: 1
+        NPM_AUTH: ((npm_auth_token))
+      run:
+        path: sh
+        args:
+          - -evc
+          - |
+            NEW_VERSION="$(cat version/version)"
+            cd repository
+            npm ci
+            npm run compile
+            npm test
+            git tag | xargs git tag -d > /dev/null
+            npm version "$NEW_VERSION"
+            npm set "$NPM_AUTH"
+            npm publish --access public
+  - in_parallel:
+    - put: version
+      params:
+        file: version/version
+    - put: repository
+      params:
+        repository: repository
+        only_tags: true
+- name: release-major
+  plan:
+  - in_parallel:
+    - get: version
+      passed: [ build ]
+      params: { bump: major }
+    - get: repository
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: node
+          tag: alpine
+      inputs:
+        - name: repository
+        - name: version
+      params:
+        CI: 'true'
+        FORCE_COLOR: 1
+        NPM_AUTH: ((npm_auth_token))
+      run:
+        path: sh
+        args:
+          - -evc
+          - |
+            NEW_VERSION="$(cat version/version)"
+            cd repository
+            npm ci
+            npm run compile
+            npm test
+            git tag | xargs git tag -d > /dev/null
+            npm version "$NEW_VERSION"
+            npm set "$NPM_AUTH"
+            npm publish --access public
+  - in_parallel:
+    - put: version
+      params:
+        file: version/version
+    - put: repository
+      params:
+        repository: repository
+        only_tags: true
+
+
+resources:
+- name: repository
+  type: git
+  icon: git
+  webhook_token: ((webhook_token))
+  check_every: never
+  source:
+    uri: git@github.com:nemoinho/comparator-js.git
+    branch: main
+    private_key: ((repository_key))
+- name: version
+  type: semver
+  icon: tag
+  check_every: never
+  source:
+    driver: git
+    uri: git@github.com:nemoinho/comparator-js-version.git
+    branch: main
+    file: version
+    private_key: ((repository_key))
+    git_user: Felix Nehrke <feix@nehrke.info>
+    initial_version: 0.0.0-rc.0
