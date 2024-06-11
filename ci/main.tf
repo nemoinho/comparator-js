@@ -11,7 +11,7 @@ data "concourse_team" "this" {
 
 resource "concourse_pipeline" "this" {
   team_name              = data.concourse_team.this.team_name
-  pipeline_name          = "comparator-ts"
+  pipeline_name          = "comparator-js"
   is_exposed             = true
   is_paused              = false
   pipeline_config        = file("pipeline.yaml")

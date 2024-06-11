@@ -1,6 +1,6 @@
 # @nemoinho/comparator
 
-[![CI](https://ci.nehrke.info/api/v1/teams/main/pipelines/comparator-ts/jobs/build/badge)](https://ci.nehrke.info/teams/main/pipelines/comparator-ts?group=build)
+[![CI](https://ci.nehrke.info/api/v1/teams/main/pipelines/comparator-js/jobs/build/badge)](https://ci.nehrke.info/teams/main/pipelines/comparator-js?group=build)
 
 Compare complex objects with ease.
 This library provides a simple API to create complex comparators and keep them understandable for humans.
