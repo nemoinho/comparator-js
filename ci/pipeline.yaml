@@ -71,6 +71,9 @@ jobs:
         args:
           - -evc
           - |
+            apk add --no-cache --no-progress git
+            git config --global user.name 'Felix Nehrke'
+            git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
             npm ci
@@ -115,6 +118,9 @@ jobs:
         args:
           - -evc
           - |
+            apk add --no-cache --no-progress git
+            git config --global user.name 'Felix Nehrke'
+            git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
             npm ci
@@ -159,6 +165,9 @@ jobs:
         args:
           - -evc
           - |
+            apk add --no-cache --no-progress git
+            git config --global user.name 'Felix Nehrke'
+            git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
             npm ci
