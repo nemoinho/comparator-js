@@ -29,6 +29,7 @@
     "url": "https://github.com/nemoinho/comparator-js/issues"
   },
   "homepage": "https://github.com/nemoinho/comparator-js#readme",
+  "keywords": ["comparator", "compare", "sort", "sorting", "comparison", "ordering", "order"],
   "devDependencies": {
     "@vitest/coverage-v8": "^1.6.0",
     "gts": "^5.3.0",
