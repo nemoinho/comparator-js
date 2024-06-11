@@ -1,5 +1,5 @@
 {
-  "name": "@nemoinho/comparator",
+  "name": "@nemoinho/comparator-js",
   "version": "unspecified",
   "description": "Sort arrays with ease and create descriptive compare-functions for them",
   "exports": {
