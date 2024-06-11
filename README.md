@@ -1,4 +1,4 @@
-# @nemoinho/comparator
+# @nemoinho/comparator-js
 
 [![CI](https://ci.nehrke.info/api/v1/teams/main/pipelines/comparator-js/jobs/build/badge)](https://ci.nehrke.info/teams/main/pipelines/comparator-js?group=build)
 
