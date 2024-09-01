@@ -89,7 +89,7 @@ function doComparing<T extends Obj>(
   valueExtractor: KeyExtractor<T> | Comparator<T>,
   keyComparator?: Compare<KeyExtractorFn<T>>
 ): Comparator<T> {
-  if (!valueExtractor)
+  if (!valueExtractor && valueExtractor !== 0)
     throw new Error(
       `invalid comparator or value-extractor: ${valueExtractor?.toString()}`
     );

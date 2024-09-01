@@ -28,6 +28,12 @@ describe('Comparator', () => {
     assertComparisons(things, comp, comparisons);
   });
 
+  it('should compare tuples by index', () => {
+    const things = numbers.map(n => [n] as const);
+    const comp = comparing<(typeof things)[number]>(0);
+    assertComparisons(things, comp, comparisons);
+  });
+
   describe('default methods', () => {
     type Person = {
       firstName: string;
@@ -109,9 +115,7 @@ describe('Comparator', () => {
 
   it('should fail when value-extractor is invalid', () => {
     const valueExtractor1 = undefined as unknown as (obj: unknown) => number;
-    const valueExtractor2 = 0 as unknown as (obj: unknown) => number;
     expect(() => comparing(valueExtractor1)).toThrow();
-    expect(() => comparing(valueExtractor2)).toThrow();
   });
 });
 
