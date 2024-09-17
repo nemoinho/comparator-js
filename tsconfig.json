@@ -2,12 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
     "declaration": true,
     "outDir": "./dist/esm",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "moduleResolution": "NodeNext"
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/index.ts"],
   "exclude": ["node_modules", "dist"]

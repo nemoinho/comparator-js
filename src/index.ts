@@ -1,20 +1,19 @@
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-type KeyExtractorFn<T> = (obj: T) => (typeof obj)[any];
-type KeyOf<T extends Obj> = keyof T & (string | number | Symbol);
-type Simple = string | number | boolean;
-export type Obj = object | Simple;
-type KeyExtractor<T extends Obj> = KeyOf<T> | KeyExtractorFn<T>;
+type KeyExtractorFn<T> = (obj: T) => (typeof obj)[any]
+type KeyOf<T extends Obj> = keyof T & (string | number | symbol)
+type Simple = string | number | boolean
+export type Obj = object | Simple
+type KeyExtractor<T extends Obj> = KeyOf<T> | KeyExtractorFn<T>
 
-type Compare<T> = {
-  (o1: T, o2: T): number;
-};
+interface Compare<T> {
+  (o1: T, o2: T): number
+}
 
 /**
  * Comparators can be passed to the sort method of arrays to sort them.
  * Alternatively, it can create a sorted copy of the array, via its own sort method.
  */
-export type Comparator<T extends Obj> = {
-  (o1: T, o2: T): number;
+export interface Comparator<T extends Obj> {
+  (o1: T, o2: T): number
 
   /**
    * Returns a {@link Comparator} with either a key, or a function that extracts a sort key,
@@ -23,7 +22,7 @@ export type Comparator<T extends Obj> = {
   thenComparing: (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
     keyComparator?: Compare<KeyExtractorFn<T>>
-  ) => Comparator<T>;
+  ) => Comparator<T>
 
   /**
    * Returns a {@link Comparator} with either a key, or a function that extracts a sort key,
@@ -32,95 +31,102 @@ export type Comparator<T extends Obj> = {
   thenComparingReverse: (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
     keyComparator?: Compare<KeyExtractorFn<T>>
-  ) => Comparator<T>;
+  ) => Comparator<T>
 
   /**
    * Returns a {@link Comparator} that imposes the reverse ordering of this comparator.
    */
-  reverse: () => Comparator<T>;
+  reverse: () => Comparator<T>
 
   /**
    * Create a sorted copy of the given array, where the order is determined by the comparator.
    */
-  sort: (list: Array<T>) => Array<T>;
-};
+  sort: (list: Array<T>) => Array<T>
+}
 
-const isNumber = (value: unknown): value is number =>
-  typeof value === 'number' && isFinite(value);
+function isNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value)
+}
 
-const isString = (value: unknown): value is string => value === '' + value;
+const isString = (value: unknown): value is string => value === `${value}`
 
-const isBoolean = (value: unknown): value is boolean =>
-  value === true || value === false;
+function isBoolean(value: unknown): value is boolean {
+  return value === true || value === false
+}
 
-const isSymbol = (value: unknown): value is Symbol => typeof value === 'symbol';
+const isSymbol = (value: unknown): value is symbol => typeof value === 'symbol'
 
-const isComparator = <T extends Obj>(
-  value: KeyExtractor<T> | Comparator<T>
-): value is Comparator<T> => value.toString().split(')')[0].includes(',');
+function isComparator<T extends Obj>(value: KeyExtractor<T> | Comparator<T>): value is Comparator<T> {
+  return value.toString().split(')')[0].includes(',')
+}
 
 function createComparator<T extends Obj>(
-  compare: (o1: T, o2: T) => number
+  compare: (o1: T, o2: T) => number,
 ): Comparator<T> {
-  const comparator = (o1: T, o2: T) => compare(o1, o2);
+  const comparator = (o1: T, o2: T) => compare(o1, o2)
   comparator.thenComparing = (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
-    keyComparator?: Compare<KeyExtractorFn<T>>
+    keyComparator?: Compare<KeyExtractorFn<T>>,
   ) => {
     const otherComparator = isComparator(valueExtractor)
       ? valueExtractor
-      : doComparing(valueExtractor, keyComparator);
+      : doComparing(valueExtractor, keyComparator)
     return createComparator<T>((o1: T, o2: T) => {
-      const res = compare(o1, o2);
-      return res !== 0 ? res : otherComparator(o1, o2);
-    });
-  };
+      const res = compare(o1, o2)
+      return res !== 0 ? res : otherComparator(o1, o2)
+    })
+  }
   comparator.thenComparingReverse = (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
-    keyComparator?: Compare<KeyExtractorFn<T>>
+    keyComparator?: Compare<KeyExtractorFn<T>>,
   ): Comparator<T> =>
     comparator.thenComparing(
-      doComparing(valueExtractor, keyComparator).reverse()
-    );
+      doComparing(valueExtractor, keyComparator).reverse(),
+    )
   comparator.reverse = () =>
-    createComparator<T>((o1: T, o2: T) => 0 - compare(o1, o2));
-  comparator.sort = (list: Array<T>) => [...list].sort(comparator);
-  return comparator;
+    createComparator<T>((o1: T, o2: T) => 0 - compare(o1, o2))
+  comparator.sort = (list: Array<T>) => [...list].sort(comparator)
+  return comparator
 }
 
 function doComparing<T extends Obj>(
   valueExtractor: KeyExtractor<T> | Comparator<T>,
-  keyComparator?: Compare<KeyExtractorFn<T>>
+  keyComparator?: Compare<KeyExtractorFn<T>>,
 ): Comparator<T> {
-  if (!valueExtractor && valueExtractor !== 0)
+  if (!valueExtractor && valueExtractor !== 0) {
     throw new Error(
-      `invalid comparator or value-extractor: ${valueExtractor?.toString()}`
-    );
-  if (isComparator(valueExtractor)) return valueExtractor;
-  const extractValue: KeyExtractorFn<T> =
-    isString(valueExtractor) ||
-    isNumber(valueExtractor) ||
-    isSymbol(valueExtractor)
+      `invalid comparator or value-extractor: ${valueExtractor?.toString()}`,
+    )
+  }
+  if (isComparator(valueExtractor))
+    return valueExtractor
+  const extractValue: KeyExtractorFn<T>
+    = isString(valueExtractor)
+    || isNumber(valueExtractor)
+    || isSymbol(valueExtractor)
       ? obj => obj[valueExtractor]
-      : valueExtractor;
-  const actualComparator =
-    keyComparator ??
-    ((a: KeyExtractorFn<T>, b: KeyExtractorFn<T>) => {
+      : valueExtractor
+  const actualComparator
+    = keyComparator
+    ?? ((a: KeyExtractorFn<T>, b: KeyExtractorFn<T>) => {
       if (isNumber(a)) {
-        return isNumber(b) ? a - b : 0;
-      } else if (isString(a)) {
-        return isString(b) ? a.localeCompare(b) : 0;
-      } else if (isBoolean(a)) {
-        return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0;
-      } else {
-        return 0;
+        return isNumber(b) ? a - b : 0
       }
-    });
+      else if (isString(a)) {
+        return isString(b) ? a.localeCompare(b) : 0
+      }
+      else if (isBoolean(a)) {
+        return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0
+      }
+      else {
+        return 0
+      }
+    })
   return createComparator((o1: T, o2: T) => {
-    const a = extractValue(o1);
-    const b = extractValue(o2);
-    return actualComparator(a, b);
-  });
+    const a = extractValue(o1)
+    const b = extractValue(o2)
+    return actualComparator(a, b)
+  })
 }
 
 /**
@@ -136,7 +142,7 @@ function doComparing<T extends Obj>(
  */
 export function comparing<T extends Obj>(
   keyExtractor: KeyExtractorFn<T>
-): Comparator<T>;
+): Comparator<T>
 
 /**
  * Accepts a key from a type T,
@@ -149,7 +155,7 @@ export function comparing<T extends Obj>(
  * const byLastName = comparing<Person>("lastName");
  * </pre>
  */
-export function comparing<T extends Obj>(keyOf: KeyOf<T>): Comparator<T>;
+export function comparing<T extends Obj>(keyOf: KeyOf<T>): Comparator<T>
 
 /**
  * Accepts a function that extracts a sort key from a type T,
@@ -168,9 +174,8 @@ export function comparing<T extends Obj>(keyOf: KeyOf<T>): Comparator<T>;
  */
 export function comparing<T extends Obj>(
   keyExtractor: KeyExtractorFn<T>,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   keyComparator: Compare<any>
-): Comparator<T>;
+): Comparator<T>
 
 /**
  * Accepts a key from a type T,
@@ -189,9 +194,8 @@ export function comparing<T extends Obj>(
  */
 export function comparing<T extends Obj>(
   keyOf: KeyOf<T>,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   keyComparator: Compare<any>
-): Comparator<T>;
+): Comparator<T>
 
 /**
  * Accepts either a key, or a function that extracts a sort key, from a type T,
@@ -210,10 +214,9 @@ export function comparing<T extends Obj>(
  */
 export function comparing<T extends Obj>(
   valueExtractor: KeyExtractorFn<T> | KeyOf<T>,
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  keyComparator?: Compare<any>
+  keyComparator?: Compare<any>,
 ): Comparator<T> {
-  return doComparing(valueExtractor, keyComparator);
+  return doComparing(valueExtractor, keyComparator)
 }
 
 /**
@@ -221,9 +224,9 @@ export function comparing<T extends Obj>(
  * the specified {@link Comparator}, or a default comparator.
  */
 export function comparingSimpleString(
-  keyComparator?: Compare<string>
+  keyComparator?: Compare<string>,
 ): Comparator<string> {
-  return comparing<string>(val => val, keyComparator!);
+  return comparing<string>(val => val, keyComparator!)
 }
 
 /**
@@ -231,7 +234,7 @@ export function comparingSimpleString(
  * the specified {@link Comparator}, or a default comparator.
  */
 export function comparingSimpleNumber(
-  keyComparator?: Compare<number>
+  keyComparator?: Compare<number>,
 ): Comparator<number> {
-  return comparing(val => val, keyComparator!);
+  return comparing(val => val, keyComparator!)
 }

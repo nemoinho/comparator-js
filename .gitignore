@@ -6,9 +6,7 @@
 !tsconfig.json
 !tsconfig.cjs.json
 !.editorconfig
-!.eslintignore
-!.eslintrc.json
-!.prettierrc.js
+!eslint.config.mjs
 !.npmignore
 !README.md
 !ci/
