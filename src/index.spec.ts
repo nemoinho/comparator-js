@@ -34,6 +34,12 @@ describe('Comparator', () => {
     assertComparisons(things, comp, comparisons);
   });
 
+  it('should compare booleans true first', () => {
+    const things = [false, true, true, false, false];
+    const comp = comparing<(typeof things)[number]>(n => n);
+    assertComparisons(things, comp, [1, 0, -1, 0]);
+  });
+
   describe('default methods', () => {
     type Person = {
       firstName: string;

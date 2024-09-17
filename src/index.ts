@@ -1,7 +1,7 @@
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 type KeyExtractorFn<T> = (obj: T) => (typeof obj)[any];
 type KeyOf<T extends Obj> = keyof T & (string | number | Symbol);
-type Simple = string | number;
+type Simple = string | number | boolean;
 export type Obj = object | Simple;
 type KeyExtractor<T extends Obj> = KeyOf<T> | KeyExtractorFn<T>;
 
@@ -49,6 +49,9 @@ const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && isFinite(value);
 
 const isString = (value: unknown): value is string => value === '' + value;
+
+const isBoolean = (value: unknown): value is boolean =>
+  value === true || value === false;
 
 const isSymbol = (value: unknown): value is Symbol => typeof value === 'symbol';
 
@@ -107,6 +110,8 @@ function doComparing<T extends Obj>(
         return isNumber(b) ? a - b : 0;
       } else if (isString(a)) {
         return isString(b) ? a.localeCompare(b) : 0;
+      } else if (isBoolean(a)) {
+        return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0;
       } else {
         return 0;
       }
