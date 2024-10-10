@@ -22,6 +22,7 @@
     "order"
   ],
   "exports": {
+    "types": "./dist/esm/index.d.ts",
     "import": "./dist/esm/index.js",
     "require": "./dist/cjs/index.js"
   },
