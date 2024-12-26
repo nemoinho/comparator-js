@@ -6,6 +6,11 @@ groups:
 - name: build
   jobs:
   - build
+- name: all
+  jobs:
+  - build
+  - 'release-*'
+  - update-npm
 
 jobs:
 - name: build
@@ -185,7 +190,56 @@ jobs:
       params:
         repository: repository
         only_tags: true
-
+- name: update-npm
+  plan:
+  - in_parallel:
+    - get: repository
+    - get: daily
+      trigger: true
+  - try:
+      do:
+      - task: npm-update
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: node
+              tag: alpine
+          inputs:
+          - name: repository
+          outputs:
+          - name: repository
+          params:
+            CI: 'true'
+            FORCE_COLOR: 1
+          run:
+            path: sh
+            args:
+            - -evc
+            - |
+              apk add --no-cache --no-progress git
+              git config --global user.name 'Felix Nehrke'
+              git config --global user.email felix@nehrke.info
+              cd repository
+              npm ci
+              npm update
+              npm run compile
+              npm test
+              git add package-lock.json package.json
+              git commit -m 'Update npm-dependencies to their latest versions'
+        on_failure:
+          put: notify
+          params:
+            message: '@channel Failed to update npm dependencies'
+            alert_type: failed
+      - put: repository
+        params:
+          repository: repository
+      - put: notify
+        params:
+          message: '@channel Updated npm dependencies'
+          alert_type: success
 
 resources:
 - name: repository
@@ -209,3 +263,18 @@ resources:
     private_key: ((repository_key))
     git_user: Felix Nehrke <feix@nehrke.info>
     initial_version: 0.0.0-rc.0
+- name: notify
+  type: slack-alert
+  icon: slack
+  source:
+    url: ((slack_webhook))
+- name: daily
+  type: time
+  source:
+    interval: 24h
+
+resource_types:
+- name: slack-alert
+  type: registry-image
+  source:
+    repository: ghcr.io/arbourd/concourse-slack-alert-resource

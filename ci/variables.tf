@@ -17,3 +17,7 @@ variable "webhoook_token" {
 variable "npm_auth_token" {
   type = string
 }
+
+variable "slack_webhook" {
+  type = string
+}
