@@ -39,10 +39,11 @@ jobs:
       run:
         path: sh
         args:
-        - -evc
+        - -ec
         - |
           NEW_VERSION="$(cat version/version)"
           cd repository
+          set -x
           npm ci
           npm run compile
           npm test
@@ -76,19 +77,20 @@ jobs:
       run:
         path: sh
         args:
-          - -evc
+          - -ec
           - |
             apk add --no-cache --no-progress git
             git config --global user.name 'Felix Nehrke'
             git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
+            npm set "$NPM_AUTH"
+            set -x
             npm ci
             npm run compile
             npm test
             git tag | xargs git tag -d > /dev/null
             npm version "$NEW_VERSION"
-            npm set "$NPM_AUTH"
             npm publish --access public
   - in_parallel:
     - put: version
@@ -124,19 +126,20 @@ jobs:
       run:
         path: sh
         args:
-          - -evc
+          - -ec
           - |
             apk add --no-cache --no-progress git
             git config --global user.name 'Felix Nehrke'
             git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
+            npm set "$NPM_AUTH"
+            set -x
             npm ci
             npm run compile
             npm test
             git tag | xargs git tag -d > /dev/null
             npm version "$NEW_VERSION"
-            npm set "$NPM_AUTH"
             npm publish --access public
   - in_parallel:
     - put: version
@@ -172,19 +175,20 @@ jobs:
       run:
         path: sh
         args:
-          - -evc
+          - -ec
           - |
             apk add --no-cache --no-progress git
             git config --global user.name 'Felix Nehrke'
             git config --global user.email felix@nehrke.info
             NEW_VERSION="$(cat version/version)"
             cd repository
+            npm set "$NPM_AUTH"
+            set -x
             npm ci
             npm run compile
             npm test
             git tag | xargs git tag -d > /dev/null
             npm version "$NEW_VERSION"
-            npm set "$NPM_AUTH"
             npm publish --access public
   - in_parallel:
     - put: version
@@ -221,12 +225,13 @@ jobs:
           run:
             path: sh
             args:
-            - -evc
+            - -ec
             - |
               apk add --no-cache --no-progress git
               git config --global user.name 'Felix Nehrke'
               git config --global user.email felix@nehrke.info
               cd repository
+              set -x
               npm ci
               npm update
               npm run compile
