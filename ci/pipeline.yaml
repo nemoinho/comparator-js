@@ -261,8 +261,6 @@ resources:
     uri: git@github.com:nemoinho/comparator-js.git
     branch: main
     private_key: ((repository_key))
-    ignore_paths:
-      - ci/**
 - name: repository-write
   type: git
   icon: git
