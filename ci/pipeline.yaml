@@ -236,8 +236,13 @@ jobs:
               npm update
               npm run compile
               npm test
-              git add package-lock.json package.json
-              git commit -m 'Update npm-dependencies to their latest versions' -m '[skip ci]'
+              git add package-lock.json package.json || true
+              git commit -m 'Update npm-dependencies to their latest versions' -m '[skip ci]' || true
+        on_failure:
+          put: notify
+          params:
+            message: '@channel Failed to update npm dependencies'
+            alert_type: failed
       - put: repository-write
         params:
           repository: repository
