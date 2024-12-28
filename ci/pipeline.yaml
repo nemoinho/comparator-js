@@ -96,7 +96,7 @@ jobs:
     - put: version
       params:
         file: version/version
-    - put: repository-write
+    - put: repository
       params:
         repository: repository
         only_tags: true
@@ -145,7 +145,7 @@ jobs:
     - put: version
       params:
         file: version/version
-    - put: repository-write
+    - put: repository
       params:
         repository: repository
         only_tags: true
@@ -194,7 +194,7 @@ jobs:
     - put: version
       params:
         file: version/version
-    - put: repository-write
+    - put: repository
       params:
         repository: repository
         only_tags: true
@@ -237,13 +237,13 @@ jobs:
               npm run compile
               npm test
               git add package-lock.json package.json || true
-              git commit -m 'Update npm-dependencies to their latest versions' -m '[skip ci]' || true
+              git commit -m 'Update npm-dependencies to their latest versions' || true
         on_failure:
           put: notify
           params:
             message: '@channel Failed to update npm dependencies'
             alert_type: failed
-      - put: repository-write
+      - put: repository
         params:
           repository: repository
       - put: notify
@@ -260,15 +260,7 @@ resources:
   source:
     uri: git@github.com:nemoinho/comparator-js.git
     branch: main
-    private_key: ((repository_key))
-- name: repository-write
-  type: git
-  icon: git
-  check_every: never
-  source:
-    uri: git@github.com:nemoinho/comparator-js.git
-    branch: main
-    private_key: ((repository_key))
+    private_key: ((repository_key))z
 - name: version
   type: semver
   icon: tag
