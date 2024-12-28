@@ -280,6 +280,7 @@ resources:
     url: ((slack_webhook))
 - name: daily
   type: time
+  icon: clock-outline
   source:
     interval: 24h
 
