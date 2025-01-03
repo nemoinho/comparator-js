@@ -1,6 +1,6 @@
 {
   "name": "@nemoinho/comparator-js",
-  "version": "unspecified",
+  "version": "1.4.1",
   "description": "Sort arrays with ease and create descriptive compare-functions for them",
   "author": "Felix Nehrke <felix+npm@nehrke.info>",
   "license": "MIT",
