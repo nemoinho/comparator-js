@@ -199,6 +199,7 @@ jobs:
         repository: repository
         only_tags: true
 - name: update-npm
+  public: true
   plan:
   - in_parallel:
     - get: repository
