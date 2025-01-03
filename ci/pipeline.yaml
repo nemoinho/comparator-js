@@ -101,7 +101,7 @@ jobs:
     - put: repository
       params:
         repository: repository
-        only_tags: true
+        only_tag: true
 - name: release-minor
   plan:
   - in_parallel:
@@ -152,7 +152,7 @@ jobs:
     - put: repository
       params:
         repository: repository
-        only_tags: true
+        only_tag: true
 - name: release-major
   plan:
   - in_parallel:
@@ -203,7 +203,7 @@ jobs:
     - put: repository
       params:
         repository: repository
-        only_tags: true
+        only_tag: true
 - name: update-npm
   public: true
   plan:
