@@ -69,6 +69,8 @@ jobs:
       inputs:
         - name: repository
         - name: version
+      outputs:
+        - name: repository
       params:
         CI: 'true'
         FORCE_COLOR: 1
@@ -118,6 +120,8 @@ jobs:
       inputs:
         - name: repository
         - name: version
+      outputs:
+        - name: repository
       params:
         CI: 'true'
         FORCE_COLOR: 1
@@ -167,6 +171,8 @@ jobs:
       inputs:
         - name: repository
         - name: version
+      outputs:
+        - name: repository
       params:
         CI: 'true'
         FORCE_COLOR: 1
