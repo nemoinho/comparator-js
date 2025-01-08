@@ -211,52 +211,47 @@ jobs:
     - get: repository
     - get: daily
       trigger: true
-  - try:
-      do:
-      - task: npm-update
-        config:
-          platform: linux
-          image_resource:
-            type: registry-image
-            source:
-              repository: node
-              tag: alpine
-          inputs:
-          - name: repository
-          outputs:
-          - name: repository
-          params:
-            CI: 'true'
-            FORCE_COLOR: 1
-            NPM_CONFIG_FUND: 'false'
-          run:
-            path: sh
-            args:
-            - -ec
-            - |
-              apk add --no-cache --no-progress git
-              git config --global user.name 'Felix Nehrke'
-              git config --global user.email felix@nehrke.info
-              cd repository
-              set -x
-              npm ci
-              npm update
-              npm run compile
-              npm test
-              git add package-lock.json package.json || true
-              git commit -m 'Update npm-dependencies to their latest versions' || true
-        on_failure:
-          put: notify
-          params:
-            message: '@channel Failed to update npm dependencies'
-            alert_type: failed
-      - put: repository
-        params:
-          repository: repository
-      - put: notify
-        params:
-          message: '@channel Updated npm dependencies'
-          alert_type: success
+  - task: npm-update
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: node
+          tag: alpine
+      inputs:
+      - name: repository
+      outputs:
+      - name: repository
+      params:
+        CI: 'true'
+        FORCE_COLOR: 1
+        NPM_CONFIG_FUND: 'false'
+      run:
+        path: sh
+        args:
+        - -ec
+        - |
+          apk add --no-cache --no-progress git
+          git config --global user.name 'Felix Nehrke'
+          git config --global user.email felix@nehrke.info
+          cd repository
+          set -x
+          npm ci
+          npm update
+          npm run compile
+          npm test
+          git add package-lock.json package.json || true
+          git commit -m 'Update npm-dependencies to their latest versions' || true
+    on_failure:
+      put: notify
+      params:
+        message: '@channel Failed to update npm dependencies'
+        alert_type: failed
+    on_success:
+      put: repository
+      params:
+        repository: repository
 
 resources:
 - name: repository
