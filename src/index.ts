@@ -102,26 +102,26 @@ function doComparing<T extends Obj>(
     return valueExtractor
   const extractValue: KeyExtractorFn<T>
     = isString(valueExtractor)
-    || isNumber(valueExtractor)
-    || isSymbol(valueExtractor)
+      || isNumber(valueExtractor)
+      || isSymbol(valueExtractor)
       ? obj => obj[valueExtractor]
       : valueExtractor
   const actualComparator
     = keyComparator
-    ?? ((a: KeyExtractorFn<T>, b: KeyExtractorFn<T>) => {
-      if (isNumber(a)) {
-        return isNumber(b) ? a - b : 0
-      }
-      else if (isString(a)) {
-        return isString(b) ? a.localeCompare(b) : 0
-      }
-      else if (isBoolean(a)) {
-        return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0
-      }
-      else {
-        return 0
-      }
-    })
+      ?? ((a: KeyExtractorFn<T>, b: KeyExtractorFn<T>) => {
+        if (isNumber(a)) {
+          return isNumber(b) ? a - b : 0
+        }
+        else if (isString(a)) {
+          return isString(b) ? a.localeCompare(b) : 0
+        }
+        else if (isBoolean(a)) {
+          return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0
+        }
+        else {
+          return 0
+        }
+      })
   return createComparator((o1: T, o2: T) => {
     const a = extractValue(o1)
     const b = extractValue(o2)
