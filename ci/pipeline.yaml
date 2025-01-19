@@ -239,9 +239,10 @@ jobs:
           set -x
           npm ci
           npm update
+          npm run -- lint --fix
           npm run compile
           npm test
-          git add package-lock.json package.json || true
+          git add . || true
           git commit -m 'Update npm-dependencies to their latest versions' || true
     on_failure:
       put: notify
