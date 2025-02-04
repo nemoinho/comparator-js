@@ -209,7 +209,7 @@ jobs:
   plan:
   - in_parallel:
     - get: repository
-    - get: daily
+    - get: weekly
       trigger: true
   - task: npm-update
     config:
@@ -281,11 +281,11 @@ resources:
   icon: slack
   source:
     url: ((slack_webhook))
-- name: daily
+- name: weekly
   type: time
   icon: clock-outline
   source:
-    interval: 24h
+    interval: 168h
 
 resource_types:
 - name: slack-alert
