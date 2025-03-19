@@ -232,13 +232,14 @@ jobs:
         args:
         - -ec
         - |
-          apk add --no-cache --no-progress git
+          apk add --no-cache --no-progress git 2>&1 > /dev/null
           git config --global user.name 'Felix Nehrke'
           git config --global user.email felix@nehrke.info
           cd repository
           set -x
           npm ci
           npm update
+          npm audit fix --force
           npm run -- lint --fix
           npm run compile
           npm test
