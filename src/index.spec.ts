@@ -51,6 +51,19 @@ describe('comparator', () => {
       .toThrowError('invalid comparator or value-extractor: undefined')
   })
 
+  it('should throw on incomparable items', () => {
+    const incompatibleThings = [
+      [1, '1'],
+      ['1', true],
+      [true, 1],
+    ]
+    const comp = comparing<(typeof things)[number]>(n => n)
+    for (const things of incompatibleThings) {
+      expect(() => comp.sort(things))
+        .toThrowError(/^uncomparable items, only one is of type \w+$/)
+    }
+  })
+
   describe('default methods', () => {
     interface Person {
       firstName: string

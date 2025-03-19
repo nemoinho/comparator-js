@@ -110,13 +110,19 @@ function doComparing<T extends Obj>(
     = keyComparator
       ?? ((a: KeyExtractorFn<T>, b: KeyExtractorFn<T>) => {
         if (isNumber(a)) {
-          return isNumber(b) ? a - b : 0
+          if (isNumber(b))
+            return a - b
+          else throw new Error('uncomparable items, only one is of type number')
         }
         else if (isString(a)) {
-          return isString(b) ? a.localeCompare(b) : 0
+          if (isString(b))
+            return a.localeCompare(b)
+          else throw new Error('uncomparable items, only one is of type string')
         }
         else if (isBoolean(a)) {
-          return isBoolean(b) ? (a === b ? 0 : a === true ? -1 : 1) : 0
+          if (isBoolean(b))
+            return a === b ? 0 : (a === true ? -1 : 1)
+          else throw new Error('uncomparable items, only one is of type boolean')
         }
         else {
           return 0
