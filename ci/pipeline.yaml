@@ -264,7 +264,7 @@ resources:
   source:
     uri: git@github.com:nemoinho/comparator-js.git
     branch: main
-    private_key: ((repository_key))z
+    private_key: ((repository_key))
 - name: version
   type: semver
   icon: tag
