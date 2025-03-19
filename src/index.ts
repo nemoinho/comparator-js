@@ -95,7 +95,7 @@ function doComparing<T extends Obj>(
 ): Comparator<T> {
   if (!valueExtractor && valueExtractor !== 0) {
     throw new Error(
-      `invalid comparator or value-extractor: ${valueExtractor?.toString()}`,
+      `invalid comparator or value-extractor: ${valueExtractor === undefined ? 'undefined' : valueExtractor}`,
     )
   }
   if (isComparator(valueExtractor))

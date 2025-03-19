@@ -42,6 +42,15 @@ describe('comparator', () => {
     assertComparisons(things, comp, [1, 0, -1, 0])
   })
 
+  it('should throw for an invalid key-extractor', () => {
+    expect(() => comparing(null))
+      .toThrowError('invalid comparator or value-extractor: null')
+    expect(() => comparing(''))
+      .toThrowError('invalid comparator or value-extractor: ')
+    expect(() => comparing(undefined))
+      .toThrowError('invalid comparator or value-extractor: undefined')
+  })
+
   describe('default methods', () => {
     interface Person {
       firstName: string
