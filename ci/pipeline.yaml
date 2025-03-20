@@ -22,33 +22,7 @@ jobs:
     - get: repository
       trigger: true
   - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: node
-          tag: alpine
-      inputs:
-      - name: repository
-      - name: version
-      params:
-        CI: 'true'
-        FORCE_COLOR: 1
-        NPM_CONFIG_FUND: 'false'
-      run:
-        path: sh
-        args:
-        - -ec
-        - |
-          NEW_VERSION="$(cat version/version)"
-          cd repository
-          set -x
-          npm ci
-          npm run compile
-          npm test
-          npm version "$NEW_VERSION"
-          npm publish --access public --dry-run
+    file: repository/ci/task-build.yaml
   - put: version
     params: { file: version/version }
 - name: release-patch
@@ -59,49 +33,20 @@ jobs:
       params: { bump: patch }
     - get: repository
   - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: node
-          tag: alpine
-      inputs:
-        - name: repository
-        - name: version
-      outputs:
-        - name: repository
-      params:
-        CI: 'true'
-        FORCE_COLOR: 1
-        NPM_AUTH: ((npm_auth_token))
-        NPM_CONFIG_FUND: 'false'
-      run:
-        path: sh
-        args:
-          - -ec
-          - |
-            apk add --no-cache --no-progress git
-            git config --global user.name 'Felix Nehrke'
-            git config --global user.email felix@nehrke.info
-            NEW_VERSION="$(cat version/version)"
-            cd repository
-            npm set "$NPM_AUTH"
-            set -x
-            npm ci
-            npm run compile
-            npm test
-            git tag | xargs git tag -d > /dev/null
-            npm version "$NEW_VERSION"
-            npm publish --access public
+    file: repository/ci/task-build.yaml
   - in_parallel:
+    - put: npm-release
+      params:
+        path: repository
+        version: version/version
+        public: 'true'
+    - put: github-release
+      params:
+        name: version/version
+        tag: version/version
     - put: version
       params:
         file: version/version
-    - put: repository
-      params:
-        repository: repository
-        only_tag: true
 - name: release-minor
   plan:
   - in_parallel:
@@ -110,49 +55,20 @@ jobs:
       params: { bump: minor }
     - get: repository
   - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: node
-          tag: alpine
-      inputs:
-        - name: repository
-        - name: version
-      outputs:
-        - name: repository
-      params:
-        CI: 'true'
-        FORCE_COLOR: 1
-        NPM_AUTH: ((npm_auth_token))
-        NPM_CONFIG_FUND: 'false'
-      run:
-        path: sh
-        args:
-          - -ec
-          - |
-            apk add --no-cache --no-progress git
-            git config --global user.name 'Felix Nehrke'
-            git config --global user.email felix@nehrke.info
-            NEW_VERSION="$(cat version/version)"
-            cd repository
-            npm set "$NPM_AUTH"
-            set -x
-            npm ci
-            npm run compile
-            npm test
-            git tag | xargs git tag -d > /dev/null
-            npm version "$NEW_VERSION"
-            npm publish --access public
+    file: repository/ci/task-build.yaml
   - in_parallel:
+    - put: npm-release
+      params:
+        path: repository
+        version: version/version
+        public: 'true'
+    - put: github-release
+      params:
+        name: version/version
+        tag: version/version
     - put: version
       params:
         file: version/version
-    - put: repository
-      params:
-        repository: repository
-        only_tag: true
 - name: release-major
   plan:
   - in_parallel:
@@ -161,49 +77,20 @@ jobs:
       params: { bump: major }
     - get: repository
   - task: build
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: node
-          tag: alpine
-      inputs:
-        - name: repository
-        - name: version
-      outputs:
-        - name: repository
-      params:
-        CI: 'true'
-        FORCE_COLOR: 1
-        NPM_AUTH: ((npm_auth_token))
-        NPM_CONFIG_FUND: 'false'
-      run:
-        path: sh
-        args:
-          - -ec
-          - |
-            apk add --no-cache --no-progress git
-            git config --global user.name 'Felix Nehrke'
-            git config --global user.email felix@nehrke.info
-            NEW_VERSION="$(cat version/version)"
-            cd repository
-            npm set "$NPM_AUTH"
-            set -x
-            npm ci
-            npm run compile
-            npm test
-            git tag | xargs git tag -d > /dev/null
-            npm version "$NEW_VERSION"
-            npm publish --access public
+    file: repository/ci/task-build.yaml
   - in_parallel:
+    - put: npm-release
+      params:
+        path: repository
+        version: version/version
+        public: 'true'
+    - put: github-release
+      params:
+        name: version/version
+        tag: version/version
     - put: version
       params:
         file: version/version
-    - put: repository
-      params:
-        repository: repository
-        only_tag: true
 - name: update-npm
   public: true
   plan:
@@ -287,9 +174,25 @@ resources:
   icon: clock-outline
   source:
     interval: 168h
+- name: github-release
+  type: github-release
+  source:
+    owner: nemoinho
+    repository: comparator-js
+    access_token: ((github_release_token))
+- name: npm-release
+  type: npm
+  source:
+    package: "@nemoinho/comparator-js"
+    registry:
+      token: ((npm_auth_token))
 
 resource_types:
 - name: slack-alert
   type: registry-image
   source:
     repository: ghcr.io/arbourd/concourse-slack-alert-resource
+- name: npm
+  type: registry-image
+  source:
+    repository: timotto/concourse-npm-resource

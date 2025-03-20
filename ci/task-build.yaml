@@ -1,0 +1,28 @@
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: node
+    tag: alpine
+inputs:
+- name: repository
+- name: version
+outputs:
+- name: repository
+- name: version
+params:
+  CI: 'true'
+  FORCE_COLOR: 1
+  NPM_CONFIG_FUND: 'false'
+run:
+  path: sh
+  dir: repository
+  args:
+  - -ecx
+  - |
+    npm ci
+    npm run compile
+    npm test
+    npm version "$(cat ../version/version)"
+    npm publish --access public --dry-run
+
