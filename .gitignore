@@ -11,6 +11,6 @@
 !README.md
 !ci/
 !ci/*.tf
-!ci/pipeline.yaml
+!ci/*.yaml
 !ci/.terraform.lock.hcl
 !LICENSE
