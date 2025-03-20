@@ -17,9 +17,10 @@ resource "concourse_pipeline" "this" {
   pipeline_config        = file("pipeline.yaml")
   pipeline_config_format = "yaml"
   vars = {
-    repository_key = var.repository_key
-    webhook_token  = var.webhoook_token
-    npm_auth_token = var.npm_auth_token
-    slack_webhook  = var.slack_webhook
+    repository_key       = var.repository_key
+    webhook_token        = var.webhoook_token
+    npm_auth_token       = var.npm_auth_token
+    slack_webhook        = var.slack_webhook
+    github_release_token = var.github_release_token
   }
 }
