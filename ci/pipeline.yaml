@@ -176,12 +176,14 @@ resources:
     interval: 168h
 - name: github-release
   type: github-release
+  icon: github
   source:
     owner: nemoinho
     repository: comparator-js
     access_token: ((github_release_token))
 - name: npm-release
   type: npm
+  icon: npm
   source:
     package: "@nemoinho/comparator-js"
     registry:
