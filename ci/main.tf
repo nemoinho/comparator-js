@@ -22,5 +22,7 @@ resource "concourse_pipeline" "this" {
     npm_auth_token       = var.npm_auth_token
     slack_webhook        = var.slack_webhook
     github_release_token = var.github_release_token
+    git_user_name        = var.git_user_name
+    git_user_email       = var.git_user_email
   }
 }

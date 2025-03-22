@@ -25,3 +25,11 @@ variable "slack_webhook" {
 variable "github_release_token" {
   type = string
 }
+
+variable "git_user_name" {
+  type = string
+}
+
+variable "git_user_email" {
+  type = string
+}
