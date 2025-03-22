@@ -1,0 +1,33 @@
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: node
+    tag: alpine
+inputs:
+- name: repository
+outputs:
+- name: repository
+params:
+  CI: 'true'
+  FORCE_COLOR: 1
+  NPM_CONFIG_FUND: 'false'
+  GIT_AUTHOR_NAME: '((git_user_name))'
+  GIT_AUTHOR_EMAIL: '((git_user_email))'
+  GIT_COMMITTER_NAME: '((git_user_name))'
+  GIT_COMMITTER_EMAIL: '((git_user_email))'
+run:
+  path: sh
+  dir: repository
+  args:
+  - -ecx
+  - |
+    apk add --no-cache --no-progress git
+    npm ci
+    npm update
+    npm audit fix --force
+    npm run -- lint --fix
+    npm run compile
+    npm test
+    git add . || true
+    git commit -m 'Update npm-dependencies to their latest versions' || true

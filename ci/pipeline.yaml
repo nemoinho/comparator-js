@@ -99,39 +99,10 @@ jobs:
     - get: weekly
       trigger: true
   - task: npm-update
-    config:
-      platform: linux
-      image_resource:
-        type: registry-image
-        source:
-          repository: node
-          tag: alpine
-      inputs:
-      - name: repository
-      outputs:
-      - name: repository
-      params:
-        CI: 'true'
-        FORCE_COLOR: 1
-        NPM_CONFIG_FUND: 'false'
-      run:
-        path: sh
-        args:
-        - -ec
-        - |
-          apk add --no-cache --no-progress git 2>&1 > /dev/null
-          git config --global user.name '((git_user_name))'
-          git config --global user.email '((git_user_email))'
-          cd repository
-          set -x
-          npm ci
-          npm update
-          npm audit fix --force
-          npm run -- lint --fix
-          npm run compile
-          npm test
-          git add . || true
-          git commit -m 'Update npm-dependencies to their latest versions' || true
+    file: repository/ci/task-update-npm.yaml
+    vars:
+      git_user_name: ((git_user_name))
+      git_user_email: ((git_user_email))
     on_failure:
       put: notify
       params:
