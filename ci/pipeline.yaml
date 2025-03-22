@@ -38,7 +38,6 @@ jobs:
     - put: npm-release
       params:
         path: repository
-        version: version/version
         public: 'true'
     - put: github-release
       params:
@@ -60,7 +59,6 @@ jobs:
     - put: npm-release
       params:
         path: repository
-        version: version/version
         public: 'true'
     - put: github-release
       params:
@@ -82,7 +80,6 @@ jobs:
     - put: npm-release
       params:
         path: repository
-        version: version/version
         public: 'true'
     - put: github-release
       params:
