@@ -8,6 +8,8 @@ inputs:
 - name: repository
 outputs:
 - name: repository
+caches:
+- path: node_modules
 params:
   CI: 'true'
   FORCE_COLOR: 1
