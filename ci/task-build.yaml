@@ -26,5 +26,5 @@ run:
     npm run compile
     npm test
     npm version "$(cat ../version/version)"
-    npm publish --access public --dry-run
+    npm publish --access public --tag latest --dry-run
 
