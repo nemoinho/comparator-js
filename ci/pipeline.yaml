@@ -126,8 +126,8 @@ resources:
   check_every: never
   source:
     driver: git
-    uri: git@github.com:nemoinho/comparator-js-version.git
-    branch: main
+    uri: git@github.com:nemoinho/comparator-js.git
+    branch: version
     file: version
     private_key: ((repository_key))
     git_user: Felix Nehrke <feix@nehrke.info>
