@@ -43,11 +43,11 @@ describe('comparator', () => {
   })
 
   it('should throw for an invalid key-extractor', () => {
-    expect(() => comparing(null))
+    expect(() => comparing(null as any))
       .toThrowError('invalid comparator or value-extractor: null')
     expect(() => comparing(''))
       .toThrowError('invalid comparator or value-extractor: ')
-    expect(() => comparing(undefined))
+    expect(() => comparing(undefined as any))
       .toThrowError('invalid comparator or value-extractor: undefined')
   })
 
@@ -57,8 +57,8 @@ describe('comparator', () => {
       ['1', true],
       [true, 1],
     ]
-    const comp = comparing<(typeof things)[number]>(n => n)
     for (const things of incompatibleThings) {
+      const comp = comparing<(typeof things)[number]>(n => n)
       expect(() => comp.sort(things))
         .toThrowError(/^uncomparable items, only one is of type \w+$/)
     }
