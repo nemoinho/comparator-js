@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
-    "moduleResolution": "Classic",
+    "moduleResolution": "node10",
     "outDir": "./dist/cjs"
   }
 }
