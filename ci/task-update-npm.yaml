@@ -24,9 +24,9 @@ run:
   args:
   - -ecx
   - |
-    apk add --no-cache --no-progress git
+    apk add --no-cache --no-progress git jq
     npm ci
-    npm update
+    jq -r '.devDependencies | keys | join("@latest ") + "@latest"' < package.json | xargs npm i -D
     npm audit fix --force
     npm run -- lint --fix
     npm run compile
