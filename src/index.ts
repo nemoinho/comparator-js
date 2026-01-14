@@ -21,7 +21,7 @@ export interface Comparator<T extends Obj> {
    */
   thenComparing: (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
-    keyComparator?: Compare<KeyExtractorFn<T>>
+    keyComparator?: Compare<KeyExtractorFn<T>>,
   ) => Comparator<T>
 
   /**
@@ -30,7 +30,7 @@ export interface Comparator<T extends Obj> {
    */
   thenComparingReverse: (
     valueExtractor: KeyExtractor<T> | Comparator<T>,
-    keyComparator?: Compare<KeyExtractorFn<T>>
+    keyComparator?: Compare<KeyExtractorFn<T>>,
   ) => Comparator<T>
 
   /**
@@ -147,7 +147,7 @@ function doComparing<T extends Obj>(
  * </pre>
  */
 export function comparing<T extends Obj>(
-  keyExtractor: KeyExtractorFn<T>
+  keyExtractor: KeyExtractorFn<T>,
 ): Comparator<T>
 
 /**
@@ -180,7 +180,7 @@ export function comparing<T extends Obj>(keyOf: KeyOf<T>): Comparator<T>
  */
 export function comparing<T extends Obj>(
   keyExtractor: KeyExtractorFn<T>,
-  keyComparator: Compare<any>
+  keyComparator: Compare<any>,
 ): Comparator<T>
 
 /**
@@ -200,7 +200,7 @@ export function comparing<T extends Obj>(
  */
 export function comparing<T extends Obj>(
   keyOf: KeyOf<T>,
-  keyComparator: Compare<any>
+  keyComparator: Compare<any>,
 ): Comparator<T>
 
 /**
