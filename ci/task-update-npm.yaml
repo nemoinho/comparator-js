@@ -26,7 +26,9 @@ run:
   - |
     apk add --no-cache --no-progress git jq
     npm ci
-    jq -r '.devDependencies | keys | join("@latest ") + "@latest"' < package.json | xargs npm i -D
+    # temporarly manual restriction of eslint to version 9.*
+    cat package.json | jq -r '.devDependencies | keys | join("@latest ") + "@latest"' | sed s/eslint@latest/eslint@9/ | xargs npm i -D
+    #cat package.json | jq -r '.devDependencies | keys | join("@latest ") + "@latest"' | xargs npm i -D
     npm audit fix --force
     npm run -- lint --fix
     npm run compile
