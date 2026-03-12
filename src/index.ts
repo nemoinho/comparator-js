@@ -85,6 +85,7 @@ function createComparator<T extends Obj>(
     )
   comparator.reverse = () =>
     createComparator<T>((o1: T, o2: T) => 0 - compare(o1, o2))
+  // eslint-disable-next-line e18e/prefer-array-to-sorted
   comparator.sort = (list: Array<T>) => [...list].sort(comparator)
   return comparator
 }
