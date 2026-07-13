@@ -26,7 +26,7 @@ run:
   - |
     apk add --no-cache --no-progress git jq
     npm ci
-    cat package.json | jq -r '.devDependencies | keys | join("@latest ") + "@latest"' | xargs npm i -D
+    cat package.json | jq -r '.devDependencies | keys | join("@latest ") + "@latest"' | sed s/typescript@latest/typescript@6/ | xargs npm i -D
     npm update -D
     npm audit fix --force
     npm run -- lint --fix
