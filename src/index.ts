@@ -73,7 +73,9 @@ function createComparator<T extends Obj>(
       : doComparing(valueExtractor, keyComparator)
     return createComparator<T>((o1: T, o2: T) => {
       const res = compare(o1, o2)
-      return res !== 0 ? res : otherComparator(o1, o2)
+      return res !== 0
+        ? res
+        : otherComparator(o1, o2)
     })
   }
   comparator.thenComparingReverse = (
@@ -96,7 +98,9 @@ function doComparing<T extends Obj>(
 ): Comparator<T> {
   if (!valueExtractor && valueExtractor !== 0) {
     throw new Error(
-      `invalid comparator or value-extractor: ${valueExtractor === undefined ? 'undefined' : valueExtractor}`,
+      `invalid comparator or value-extractor: ${valueExtractor === undefined
+        ? 'undefined'
+        : valueExtractor}`,
     )
   }
   if (isComparator(valueExtractor))
@@ -121,9 +125,16 @@ function doComparing<T extends Obj>(
           else throw new Error('uncomparable items, only one is of type string')
         }
         else if (isBoolean(a)) {
-          if (isBoolean(b))
-            return a === b ? 0 : (a === true ? -1 : 1)
-          else throw new Error('uncomparable items, only one is of type boolean')
+          if (isBoolean(b)) {
+            return a === b
+              ? 0
+              : (a === true
+                  ? -1
+                  : 1)
+          }
+          else {
+            throw new Error('uncomparable items, only one is of type boolean')
+          }
         }
         else {
           return 0
